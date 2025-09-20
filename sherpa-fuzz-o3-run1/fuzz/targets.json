@@ -1,0 +1,48 @@
+[
+  {
+    "name": "ftp_cmd_parser",
+    "api": "ftpd.c::parser",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "ftpd",
+    "reason": "Top-level command dispatcher invoked for every FTP control channel line; complex string parsing and branching across most of the daemon.",
+    "evidence": ["ftpd.c:263"]
+  },
+  {
+    "name": "ftp_list_option_parser",
+    "api": "ls.c::donlist",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "ftpd",
+    "reason": "Parses user-supplied LIST/NLST option flags and file names; reachable pre-authentication; manipulates global state and performs directory traversal.",
+    "evidence": ["ls.c:540", "ftpd.c:417"]
+  },
+  {
+    "name": "ftp_port_parser",
+    "api": "ftpd.c::doport",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "ftpd",
+    "reason": "Handles numeric host/port fields from PORT/EPRT commands; integer conversions and boundary checks directly influenced by attacker.",
+    "evidence": ["ftpd.c:804", "ftpd.c:300"]
+  },
+  {
+    "name": "ftp_cwd_path_handler",
+    "api": "ftpd.c::docwd",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "ftpd",
+    "reason": "Processes directory names for CWD/CDUP; path canonicalisation and filesystem interactions make it sensitive to strange inputs.",
+    "evidence": ["ftpd.c:674"]
+  },
+  {
+    "name": "ftp_line_reader",
+    "api": "ftpd.c::sfgets",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "ftpd",
+    "reason": "Custom getline replacement implementing protocol framing and timeout handling; feeds data into the command parser and has non-trivial state machine.",
+    "evidence": ["ftpd.c:212"]
+  }
+]
+
