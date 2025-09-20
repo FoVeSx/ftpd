@@ -1,0 +1,105 @@
+[
+  {
+    "name": "ftp_cmd_parser_fuzz",
+    "api": "ftpd::parser",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "Makefile target: ftpd",
+    "reason": "Top-level FTP control parser for all client commands; maximizes reach across dispatch paths and string parsing including PORT/EPRT, SITE, and others.",
+    "evidence": [
+      "ftpd.c:263",
+      "ftpd.c:338",
+      "ftpd.c:344",
+      "ftpd.c:385"
+    ]
+  },
+  {
+    "name": "ftp_cwd_fuzz",
+    "api": "ftpd::docwd",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "Makefile target: ftpd",
+    "reason": "Attacker-controlled path parsing for CWD, including ~user expansion and message banner reading.",
+    "evidence": [
+      "ftpd.c:674",
+      "ftpd.c:374"
+    ]
+  },
+  {
+    "name": "ftp_list_arg_fuzz",
+    "api": "ls::donlist",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "Makefile target: ftpd",
+    "reason": "LIST/NLST option and glob parsing is user-controlled; historically bug-prone (flags, recursion, globbing).",
+    "evidence": [
+      "ls.c:540",
+      "ls.c:546",
+      "ls.c:596",
+      "ls.c:673"
+    ]
+  },
+  {
+    "name": "ftp_user_fuzz",
+    "api": "ftpd::douser",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "Makefile target: ftpd",
+    "reason": "USER input path controls local/anonymous handling and group membership reporting; reachable in all sessions.",
+    "evidence": [
+      "ftpd.c:513",
+      "ftpd.c:372"
+    ]
+  },
+  {
+    "name": "ftp_pass_fuzz",
+    "api": "ftpd::dopass",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "Makefile target: ftpd",
+    "reason": "PASS input triggers password verification and group listing output paths.",
+    "evidence": [
+      "ftpd.c:619",
+      "ftpd.c:374"
+    ]
+  },
+  {
+    "name": "ftp_retr_path_fuzz",
+    "api": "ftpd::doretr",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "Makefile target: ftpd",
+    "reason": "RETR file path is attacker-controlled; exercises file stat/mmap and boundary checks prior to data connection.",
+    "evidence": [
+      "ftpd.c:952",
+      "ftpd.c:385"
+    ]
+  },
+  {
+    "name": "ftp_stor_path_fuzz",
+    "api": "ftpd::dostor",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "Makefile target: ftpd",
+    "reason": "STOR path and content are client-controlled; path handling and write loops can be exercised with wrapped data connection.",
+    "evidence": [
+      "ftpd.c:1177",
+      "ftpd.c:392"
+    ]
+  },
+  {
+    "name": "ftp_meta_fuzz",
+    "api": "ftpd::domdtm",
+    "lang": "c-cpp",
+    "proto": "const uint8_t*,size_t",
+    "build_target": "Makefile target: ftpd",
+    "reason": "MDTM/SIZE parse paths accept attacker-controlled file names; quick metadata lookups with simple branching.",
+    "evidence": [
+      "ftpd.c:1328",
+      "ftpd.c:1355",
+      "ftpd.c:465",
+      "ftpd.c:467"
+    ]
+  }
+]
+

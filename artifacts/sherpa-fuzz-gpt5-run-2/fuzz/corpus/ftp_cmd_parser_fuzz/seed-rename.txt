@@ -1,0 +1,3 @@
+RNFR foo.txt
+RNTO bar.txt
+
