@@ -1,0 +1,21 @@
+diff -Naur troll-ftpd-1.28.orig/ls.c troll-ftpd-1.28/ls.c
+--- troll-ftpd-1.28.orig/ls.c	2007-03-22 21:22:30.000000000 +0200
++++ troll-ftpd-1.28/ls.c	2007-03-22 21:26:09.000000000 +0200
+@@ -398,6 +398,8 @@
+ }
+ 
+ 
++static int cmp( const void *a, const void *b );
++
+ char **sreaddir( const char *dirname )
+ {
+     DIR *d;
+@@ -407,7 +409,7 @@
+     char **p;
+     unsigned int s;
+     int dsize;
+-    static int cmp( const void *a, const void *b );
++
+ 
+     if ( stat( dirname, &st ) < 0 )
+ 	return NULL;

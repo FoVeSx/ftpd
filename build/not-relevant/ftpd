@@ -1,0 +1,12 @@
+# default: off
+# description: TrollTech lightweight ftp server
+service ftp
+{
+    disable = no
+    socket_type     = stream
+    wait            = no
+    user            = root
+    server          = /usr/sbin/iftpd
+    log_on_failure  += USERID
+}
+							

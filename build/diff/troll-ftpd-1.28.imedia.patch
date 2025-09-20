@@ -1,0 +1,72 @@
+diff -Naur troll-ftpd-1.28.orig/ftpd.c troll-ftpd-1.28/ftpd.c
+--- troll-ftpd-1.28.orig/ftpd.c	2002-02-05 13:51:33.000000000 +0200
++++ troll-ftpd-1.28/ftpd.c	2006-02-01 12:20:35.000000000 +0200
+@@ -1519,7 +1519,7 @@
+ 
+     openlog( "in.ftpd", LOG_CONS | LOG_PID, LOG_LOCAL2 );
+ 
+-    /* mmap in /var/adm/ftp/users and /var/adm/ftp/groups, for use by
++    /* mmap in /etc/ftpd/users and /etc/ftpd/groups, for use by
+        ls. do it before the chroot if ls is supposed to show the same
+        stuff. */
+     getnames();
+@@ -1694,7 +1694,7 @@
+     if ( he && he->h_name ) {
+ 	char name[PATH_MAX];
+ 
+-	if ( snprintf( name, PATH_MAX, "/var/adm/ftp/%s/.", he->h_name ) < 0 ){
++	if ( snprintf( name, PATH_MAX, "/etc/ftpd/%s/.", he->h_name ) < 0 ){
+ 	    syslog( LOG_ERR, "host name far too long for %s",
+ 		    inet_ntoa( ctrlconn.sin_addr ) );
+ 	    exit( 15 );
+diff -Naur troll-ftpd-1.28.orig/ls.c troll-ftpd-1.28/ls.c
+--- troll-ftpd-1.28.orig/ls.c	2006-02-01 12:21:44.000000000 +0200
++++ troll-ftpd-1.28/ls.c	2006-02-01 12:20:01.000000000 +0200
+@@ -88,7 +88,7 @@
+ 
+     /* uid_t can have 65536 values on linux */
+ 
+-    f = open( "/var/adm/ftp/users", O_RDONLY );
++    f = open( "/etc/ftpd/users", O_RDONLY );
+     if ( f >= 0 ) {
+ 	users = mmap( 0, (size_t) 9 * 65536,
+ 		      PROT_READ, MAP_FILE | MAP_SHARED, f, 0 );
+@@ -97,7 +97,7 @@
+ 	    close( f );
+ 	}
+     }
+-    f = open( "/var/adm/ftp/groups", O_RDONLY );
++    f = open( "/etc/ftpd/groups", O_RDONLY );
+     if ( f >= 0 ) {
+ 	groups = mmap( 0, ( size_t ) 9 * 65536,
+ 		       PROT_READ, MAP_FILE | MAP_SHARED, f, 0 );
+@@ -586,8 +586,6 @@
+ 		opt_S = 1;
+ 		opt_t = 0;
+ 		break;
+-	    default:
+-
+ 	    }
+ 	}
+ 	while ( isspace( *arg ) )
+diff -Naur troll-ftpd-1.28.orig/mkusers.c troll-ftpd-1.28/mkusers.c
+--- troll-ftpd-1.28.orig/mkusers.c	2002-02-05 13:51:33.000000000 +0200
++++ troll-ftpd-1.28/mkusers.c	2006-02-01 12:20:49.000000000 +0200
+@@ -11,7 +11,7 @@
+     int f;
+     char dummy[17];
+ 
+-    f = open("/var/adm/ftp/users", O_WRONLY|O_CREAT|O_TRUNC, 0644);
++    f = open("/etc/ftpd/users", O_WRONLY|O_CREAT|O_TRUNC, 0644);
+     if (f>=0) {
+ 	struct passwd * pw;
+ 	while((pw = getpwent()) != NULL) {
+@@ -24,7 +24,7 @@
+ 	exit( 1 );
+     }
+ 
+-    f = open("/var/adm/ftp/groups", O_WRONLY|O_CREAT|O_TRUNC, 0644);
++    f = open("/etc/ftpd/groups", O_WRONLY|O_CREAT|O_TRUNC, 0644);
+     if (f>=0) {
+ 	struct group * gr;
+ 	while((gr = getgrent()) != NULL) {

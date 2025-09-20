@@ -1,0 +1,6 @@
+*troll-ftpd-1.28 (1 Feb 2006)
+
+  1 Feb 2006; Razvan Udrea <razvan@ituner.com> troll-ftpd-1.28.ebuild:
+  Initial release to portage-imedia
+  +files/lc.c.diff
+	  
